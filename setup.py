@@ -3,10 +3,10 @@ from setuptools import setup
 setup(
     author='Konstiantyn Snihyr',
     author_email='konstantin.s@cliqz.com',
-    name='cinepass-python',
+    name='cinepass-pythonclient',
     version='0.1',
     provides=['cinepass'],
-    url='https://github.com/cliqz-oss/cinepass-python/',
+    url='https://github.com/cliqz/cinepass-pythonclient',
     packages=[
         'cinepass',
         'cinepass.client',
