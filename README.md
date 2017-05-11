@@ -1,4 +1,3 @@
-=====================
 cinepass-pythonclient
 =====================
 
@@ -10,10 +9,11 @@ Detailed description of API you can find at https://api.cinepass.de/documentatio
 
 Basic usage:
 
-::
+```python
     from cinepass import Client
     client = Client(api_key='<your api key>')
     client.movies.all()  # get list of all movies
     client.cinemas.all(location='52.50,13.37')  # get cinemas around location
     ...  # and so on
+```
 
