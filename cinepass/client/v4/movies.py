@@ -1,5 +1,6 @@
 import collections
 import datetime
+import itertools
 
 import six
 
@@ -155,10 +156,14 @@ class MoviesManager(object):
         movie_data = response['movie']
         return Movie(**movie_data)
 
-    def all(self, **kwargs):
+    def _all(self, **kwargs):
         fields = kwargs.get('fields') or \
-                 'id,title,slug,poster_image_thumbnail,release_dates,runtime,agelimits' \
+                 'id,title,slug,poster_image_thumbnail,release_dates,runtime,age_limits' \
                  ',cast,crew,synopsis,imdb_id,ratings'
         kwargs['fields'] = fields
         response = self.http_client.get(self.ENDPOINT, **kwargs)
         return [Movie(**data) for data in response['movies']]
+
+    def all(self, chunk_size=100, limit=1500, offset=0, **kwargs):
+        return list(itertools.chain.from_iterable(
+            [self._all(limit=chunk_size, offset=offset+i, **kwargs) for i in range(0, limit, chunk_size)]))

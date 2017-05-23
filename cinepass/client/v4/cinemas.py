@@ -1,3 +1,6 @@
+import itertools
+
+
 class Address(object):
     __slots = ['text', 'street', 'house', 'zipcode', 'city', 'state', 'state_abbr', 'country_name', 'country_code']
 
@@ -62,8 +65,8 @@ class CinemasManager(object):
         cinema = Cinema(**cinema_info)
         return cinema
 
-    def all(self, offset=0, limit=1500, distance=20,
-            city_ids=None, chain_ids=None, location=None, bounds=None, countries=None):
+    def _all(self, offset=0, limit=1500, distance=20,
+             city_ids=None, chain_ids=None, location=None, bounds=None, countries=None):
         """
 
         :type countries: str
@@ -107,3 +110,8 @@ class CinemasManager(object):
 
         response = self.http_client.get(self.ENDPOINT, **params)
         return [Cinema(**info) for info in response['cinemas']]
+
+    def all(self, chunk_size=100, limit=1500, offset=0, **kwargs):
+        return list(itertools.chain.from_iterable(
+            [self._all(limit=chunk_size, offset=offset + i, **kwargs) for i in
+             range(0, limit, chunk_size)]))
