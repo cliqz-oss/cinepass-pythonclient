@@ -4,7 +4,7 @@ setup(
     author='Konstiantyn Snihyr',
     author_email='konstantin.s@cliqz.com',
     name='cinepass-pythonclient',
-    version='0.1',
+    version='0.2',
     provides=['cinepass'],
     url='https://github.com/cliqz/cinepass-pythonclient',
     packages=[
