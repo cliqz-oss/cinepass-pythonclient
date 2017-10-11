@@ -159,7 +159,7 @@ class MoviesManager(object):
     def _all(self, **kwargs):
         fields = kwargs.get('fields') or \
                  'id,title,slug,poster_image_thumbnail,release_dates,runtime,age_limits' \
-                 ',cast,crew,synopsis,imdb_id,ratings'
+                 ',cast,crew,synopsis,imdb_id,ratings,website,trailers,poster_image,original_language,original_title'
         kwargs['fields'] = fields
         response = self.http_client.get(self.ENDPOINT, **kwargs)
         return [Movie(**data) for data in response['movies']]
