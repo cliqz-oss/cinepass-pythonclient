@@ -1,5 +1,5 @@
-import cinemas
-import movies
+from cinepass.client.v4 import cinemas
+from cinepass.client.v4 import movies
 
 
 class Showtime(object):
