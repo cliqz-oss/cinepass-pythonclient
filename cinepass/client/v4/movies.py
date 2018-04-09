@@ -152,7 +152,7 @@ class MoviesManager(object):
         self.http_client = http_client
 
     def get(self, id, **kwargs):
-        response = self.http_client.get("%s/%s" % (self.ENDPOINT, id), params=kwargs)
+        response = self.http_client.get("%s/%s" % (self.ENDPOINT, id), **kwargs)
         movie_data = response['movie']
         return Movie(**movie_data)
 
