@@ -1,7 +1,9 @@
+import json
 import unittest
-import mock
 
+from cinepass.client.v4 import http_client
 from cinepass.client.v4 import locales
+from tests.utils import mock_session, async_test
 
 SERVER_RESPONSE = {
     "locales": [
@@ -22,9 +24,9 @@ SERVER_RESPONSE = {
 
 
 class TestLocales(unittest.TestCase):
-    def test_locales(self):
-        http_mock = mock.MagicMock()
-        http_mock.get.return_value = SERVER_RESPONSE
-        manager = locales.LocalesManager(http_mock)
-        self.assertEqual(len(manager.all()), len(SERVER_RESPONSE['locales']))
-        self.assertIn('de', manager.all())
+    @async_test
+    @mock_session(json.dumps(SERVER_RESPONSE))
+    async def test_locales(self):
+        manager = locales.LocalesManager(http_client.HttpClient("test"))
+        self.assertEqual(len(await manager.all()), len(SERVER_RESPONSE['locales']))
+        self.assertIn('de', await manager.all())

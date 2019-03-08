@@ -59,14 +59,26 @@ class CinemasManager(object):
     def __init__(self, http_client):
         self.http_client = http_client
 
-    def get(self, cinema_id, lang='en'):
-        response = self.http_client.get('%s/%s' % (self.ENDPOINT, cinema_id), lang=lang)
+    async def get(self, cinema_id, lang='en'):
+        response = await self.http_client.get(
+            '%s/%s' % (self.ENDPOINT, cinema_id),
+            lang=lang
+        )
         cinema_info = response['cinema']
         cinema = Cinema(**cinema_info)
         return cinema
 
-    def _all(self, offset=0, limit=1500, distance=20,
-             city_ids=None, chain_ids=None, location=None, bounds=None, countries=None):
+    async def _all(
+            self,
+            offset=0,
+            limit=1500,
+            distance=20,
+            city_ids=None,
+            chain_ids=None,
+            location=None,
+            bounds=None,
+            countries=None
+    ):
         """
 
         :type countries: str
@@ -108,10 +120,13 @@ class CinemasManager(object):
         if countries:
             params['countries'] = countries
 
-        response = self.http_client.get(self.ENDPOINT, **params)
+        response = await self.http_client.get(self.ENDPOINT, **params)
         return [Cinema(**info) for info in response['cinemas']]
 
-    def all(self, chunk_size=100, limit=1500, offset=0, **kwargs):
+    async def all(self, chunk_size=100, limit=1500, offset=0, **kwargs):
         return list(itertools.chain.from_iterable(
-            [self._all(limit=chunk_size, offset=offset + i, **kwargs) for i in
-             range(0, limit, chunk_size)]))
+            [
+                await self._all(limit=chunk_size, offset=offset + i, **kwargs)
+                for i in range(0, limit, chunk_size)
+            ]
+        ))

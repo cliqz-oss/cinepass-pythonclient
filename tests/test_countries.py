@@ -1,7 +1,9 @@
+import json
 import unittest
-import mock
 
 from cinepass.client.v4 import countries
+from cinepass.client.v4 import http_client
+from tests.utils import mock_session, async_test
 
 SERVER_RESPONSE = {
     "countries": [
@@ -38,9 +40,9 @@ SERVER_RESPONSE = {
 
 
 class TestCountries(unittest.TestCase):
-    def test_countries(self):
-        http_mock = mock.MagicMock()
-        http_mock.get.return_value = SERVER_RESPONSE
-        manager = countries.CountriesManager(http_mock)
-        self.assertEqual(len(manager.all()), len(SERVER_RESPONSE['countries']))
-        self.assertIn(countries.Country('GB', True), manager.all(access_granted=True))
+    @async_test
+    @mock_session(json.dumps(SERVER_RESPONSE))
+    async def test_countries(self):
+        manager = countries.CountriesManager(http_client.HttpClient("test"))
+        self.assertEqual(len(await manager.all()), len(SERVER_RESPONSE['countries']))
+        self.assertIn(countries.Country('GB', True), await manager.all(access_granted=True))

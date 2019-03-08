@@ -22,7 +22,16 @@ class CityManager(object):
     def __init__(self, http_client):
         self.http_client = http_client
 
-    def get(self, offset=0, limit=1500, lang='en', countries=None, near_to=None, movie_id=None, query=None):
+    async def get(
+            self,
+            offset=0,
+            limit=1500,
+            lang='en',
+            countries=None,
+            near_to=None,
+            movie_id=None,
+            query=None
+    ):
         params = {
             'offset': offset,
             'limit': limit,
@@ -36,6 +45,6 @@ class CityManager(object):
             params['movie_id'] = movie_id
         if query:
             params['query'] = query
-        result = self.http_client.get(self.ENDPOINT, **params)
+        result = await self.http_client.get(self.ENDPOINT, **params)
         cities = result['cities']
         return [City(**args) for args in cities]

@@ -1,9 +1,11 @@
 # coding: utf-8
 
+import json
 import unittest
-import mock
 
 from cinepass.client.v4 import cities
+from cinepass.client.v4 import http_client
+from tests.utils import mock_session, async_test
 
 SERVER_RESPONSE = {
     "cities": [
@@ -44,12 +46,12 @@ SERVER_RESPONSE = {
 
 
 class TestCities(unittest.TestCase):
-    def test_cities(self):
-        http_mock = mock.MagicMock()
-        http_mock.get.return_value = SERVER_RESPONSE
-        manager = cities.CityManager(http_mock)
-        self.assertEqual(len(manager.get()), len(SERVER_RESPONSE['cities']))
+    @async_test
+    @mock_session(json.dumps(SERVER_RESPONSE))
+    async def test_cities(self):
+        manager = cities.CityManager(http_client.HttpClient("test"))
+        self.assertEqual(len(await manager.get()), len(SERVER_RESPONSE['cities']))
         self.assertIn(
             cities.City(id=4, name='Frankfurt am Main', slug='frankfurt-am-main', lat=50.121212, lon=8.6365638,
                         country='DE'),
-            manager.get())
+            await manager.get())

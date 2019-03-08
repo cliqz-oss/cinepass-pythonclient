@@ -36,8 +36,11 @@ class Trailer(object):
 
     @classmethod
     def from_dict(cls, obj):
-        return cls(is_official=obj['is_official'], language=obj['language'],
-                   files=[TrailerFile.from_dict(x) for x in obj['trailer_files']])
+        return cls(
+            is_official=obj['is_official'],
+            language=obj['language'],
+            files=[TrailerFile.from_dict(x) for x in obj['trailer_files']]
+        )
 
     @classmethod
     def from_list(cls, lst):
@@ -151,19 +154,24 @@ class MoviesManager(object):
     def __init__(self, http_client):
         self.http_client = http_client
 
-    def get(self, id, **kwargs):
-        response = self.http_client.get("%s/%s" % (self.ENDPOINT, id), **kwargs)
+    async def get(self, id, **kwargs):
+        response = await self.http_client.get(
+            "%s/%s" % (self.ENDPOINT, id),
+            **kwargs
+        )
         movie_data = response['movie']
         return Movie(**movie_data)
 
-    def _all(self, **kwargs):
+    async def _all(self, **kwargs):
         fields = kwargs.get('fields') or \
                  'id,title,slug,poster_image_thumbnail,release_dates,runtime,age_limits' \
                  ',cast,crew,synopsis,imdb_id,ratings,website,trailers,poster_image,original_language,original_title'
         kwargs['fields'] = fields
-        response = self.http_client.get(self.ENDPOINT, **kwargs)
+        response = await self.http_client.get(self.ENDPOINT, **kwargs)
         return [Movie(**data) for data in response['movies']]
 
-    def all(self, chunk_size=100, limit=1500, offset=0, **kwargs):
-        return list(itertools.chain.from_iterable(
-            [self._all(limit=chunk_size, offset=offset+i, **kwargs) for i in range(0, limit, chunk_size)]))
+    async def all(self, chunk_size=100, limit=1500, offset=0, **kwargs):
+        return list(itertools.chain.from_iterable([
+            await self._all(limit=chunk_size, offset=offset+i, **kwargs)
+            for i in range(0, limit, chunk_size)
+        ]))

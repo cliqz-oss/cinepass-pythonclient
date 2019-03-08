@@ -1,5 +1,4 @@
-requests
-six
 pytest
 mock
 flake8
+aiohttp==3.5.4

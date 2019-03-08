@@ -9,13 +9,13 @@ class CountriesManager(object):
     def __init__(self, http_client):
         self.http_client = http_client
 
-    def all(self, access_granted=None):
+    async def all(self, access_granted=None):
         """
         Returns list of all countries
         :param access_granted: boolean
         :return: [Country]
         """
-        response = self.http_client.get(self.ENDPOINT)
+        response = await self.http_client.get(self.ENDPOINT)
         countries = response['countries']
         if access_granted is not None:
             countries = filter(lambda x: x['is_access_granted'], countries)

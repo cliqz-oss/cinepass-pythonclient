@@ -20,20 +20,20 @@ class Showtime(object):
         self._cinema = None
 
     @property
-    def cinema(self):
+    async def cinema(self):
         if self._cinema:
             return self._cinema
         if self.http_client:
             manager = cinemas.CinemasManager(self.http_client)
-            return manager.get(self.cinema_id)
+            return await manager.get(self.cinema_id)
 
     @property
-    def movie(self):
+    async def movie(self):
         if self._movie:
             return self._movie
         if self.http_client:
             manager = movies.MoviesManager(self.http_client)
-            return manager.get(self.movie_id)
+            return await manager.get(self.movie_id)
 
 
 class ShowtimeManager(object):
@@ -42,11 +42,19 @@ class ShowtimeManager(object):
     def __init__(self, http_client):
         self.http_client = http_client
 
-    def get(self, id, **kwargs):
-        response = self.http_client.get("%s/%s" % (self.ENDPOINT, id), params=kwargs)
+    async def get(self, id, **kwargs):
+        response = await self.http_client.get(
+            "%s/%s" % (self.ENDPOINT, id),
+            params=kwargs
+        )
         showtime_data = response['showtime']
         return Showtime(http_client=self.http_client, **showtime_data)
 
-    def all(self, **kwargs):
-        response = self.http_client.get(self.ENDPOINT, **kwargs)['showtimes']
-        return [Showtime(http_client=self.http_client, **obj) for obj in response]
+    async def all(self, **kwargs):
+        response = (await self.http_client.get(
+            self.ENDPOINT, **kwargs
+        ))['showtimes']
+        return [
+            Showtime(http_client=self.http_client, **obj)
+            for obj in response
+        ]

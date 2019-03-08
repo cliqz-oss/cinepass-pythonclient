@@ -1,7 +1,9 @@
+import json
 import unittest
-import mock
 
+from cinepass.client.v4 import http_client
 from cinepass.client.v4 import movies
+from tests.utils import mock_session, async_test
 
 SERVER_RESPONSE = {
     "movie": {
@@ -950,11 +952,11 @@ SERVER_RESPONSE = {
 
 
 class TestCinemas(unittest.TestCase):
-    def test_cinemas(self):
-        http_mock = mock.MagicMock()
-        http_mock.get.return_value = SERVER_RESPONSE
-        manager = movies.MoviesManager(http_mock)
-        cinema = manager.get(101)
+    @async_test
+    @mock_session(json.dumps(SERVER_RESPONSE))
+    async def test_cinemas(self):
+        manager = movies.MoviesManager(http_client.HttpClient("test"))
+        cinema = await manager.get(101)
         self.assertEqual(len(cinema.cast), len(SERVER_RESPONSE['movie']['cast']))
         self.assertIn("Alec Baldwin", [x.name for x in cinema.cast])
         self.assertEqual(cinema.ratings['imdb'].value, 6.5)

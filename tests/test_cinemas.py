@@ -1,9 +1,11 @@
 # coding: utf-8
 
+import json
 import unittest
-import mock
 
 from cinepass.client.v4 import cinemas
+from cinepass.client.v4 import http_client
+from tests.utils import mock_session, async_test
 
 SERVER_RESPONSE = {
     "cinema": {
@@ -34,9 +36,9 @@ SERVER_RESPONSE = {
 
 
 class TestCinemas(unittest.TestCase):
-    def test_cinemas(self):
-        http_mock = mock.MagicMock()
-        http_mock.get.return_value = SERVER_RESPONSE
-        manager = cinemas.CinemasManager(http_mock)
-        cinema = manager.get(101)
+    @async_test
+    @mock_session(json.dumps(SERVER_RESPONSE))
+    async def test_cinemas(self):
+        manager = cinemas.CinemasManager(http_client.HttpClient("test"))
+        cinema = await manager.get(101)
         self.assertEqual(cinema.location.address.street, "Luisenstra\u00dfe")

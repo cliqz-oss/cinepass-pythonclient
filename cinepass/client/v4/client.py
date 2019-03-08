@@ -9,4 +9,4 @@ class Client(object):
         self.countries = countries.CountriesManager(self.http)
         self.cities = cities.CityManager(self.http)
         self.showtimes = showtimes.ShowtimeManager(self.http)
-        self.chains = chains.ChainManeger(self.http)
+        self.chains = chains.ChainManager(self.http)
