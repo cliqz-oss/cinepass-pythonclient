@@ -1,6 +1,6 @@
 class Chain(object):
-    def __init__(self, id_, name, websites, countries):
-        self.id = id_
+    def __init__(self, id, name, websites, countries):
+        self.id = id
         self.name = name
         self.websites = websites
         self.countries = countries
