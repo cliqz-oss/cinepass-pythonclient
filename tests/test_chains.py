@@ -55,6 +55,17 @@ SERVER_RESPONSE = {
             "countries": [
                 "DE"
             ]
+        },
+        {
+            "id": "4",
+            "name": "CineStar",
+            "websites": [
+                "http://www.cinestar.de"
+            ],
+            "countries": [
+                "DE"
+            ],
+            "new_key": "test"
         }
     ]
 }
@@ -66,5 +77,5 @@ class TestCinemas(unittest.TestCase):
     async def test_cinemas(self):
         manager = chains.ChainManager(http_client.HttpClient("test"))
         response = await manager.all('DE')
-        self.assertEqual(len(response), 4)
+        self.assertEqual(len(response), 5)
         self.assertEqual(response[0].id, '1')

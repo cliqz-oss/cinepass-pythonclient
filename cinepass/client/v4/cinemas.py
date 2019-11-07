@@ -37,11 +37,13 @@ class Location(object):
 
 class Cinema(object):
     def __init__(self, id, slug, name, booking_type,
-                 telephone=None, chain_id=None, phone=None, email=None, website=None, location=None):
+                 telephone=None, chain_id=None, phone=None, email=None,
+                 website=None, location=None, city_id=None, **kwargs):
         self.id = id
         self.slug = slug
         self.name = name
         self.chain_id = chain_id
+        self.city_id = city_id
         self.phone = phone
         self.email = email
         self.website = website

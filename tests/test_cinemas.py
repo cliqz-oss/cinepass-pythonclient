@@ -30,7 +30,9 @@ SERVER_RESPONSE = {
         "name": "Citydome - Pali Kino",
         "slug": "pali-kino-darmstadt",
         "telephone": "0 61 51/2 97 89",
-        "website": "http://www.helia-kinos.de"
+        "website": "http://www.helia-kinos.de",
+        "city_id": "34",
+        "new_key": "test"
     }
 }
 

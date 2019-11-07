@@ -1,7 +1,7 @@
 class City(object):
     __slots__ = ['id', 'name', 'slug', 'lat', 'lon', 'country']
 
-    def __init__(self, id, name, slug, lat, lon, country):
+    def __init__(self, id, name, slug, lat, lon, country, **kwargs):
         self.id = int(id)
         self.name = name
         self.slug = slug

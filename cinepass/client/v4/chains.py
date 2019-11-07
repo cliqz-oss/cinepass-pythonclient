@@ -1,5 +1,5 @@
 class Chain(object):
-    def __init__(self, id, name, websites, countries):
+    def __init__(self, id, name, websites, countries, **kwargs):
         self.id = id
         self.name = name
         self.websites = websites
